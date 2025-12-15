@@ -2,6 +2,7 @@ from aiogram import Router
 from aiogram.types import Message
 from aiogram.filters import Command
 from db.database import cursor, conn
+from keyboards.menu import main_menu
 
 start_router = Router()
 
@@ -17,5 +18,6 @@ async def start_cmd(message: Message):
     conn.commit()
 
     await message.answer(
-        "🐠 خوش اومدی!\n\nاز منوی زیر استفاده کن 👇"
+        "🐠 خوش اومدی!\n\nیکی از گزینه‌ها رو انتخاب کن 👇",
+        reply_markup=main_menu()
     )
