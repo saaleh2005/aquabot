@@ -1,21 +1,21 @@
-from aiogram import Router
+from aiogram import Router, F
 from aiogram.types import Message
 from db.database import cursor
 
 search_router = Router()
 
-@search_router.message()
+@search_router.message(F.text.len() > 2)
 async def search_handler(message: Message):
-    query = message.text.strip()
+    text = message.text.strip()
 
-    # دستورات رو رد کن
-    if query.startswith("/"):
+    # اگر دستور بود، ردش کن
+    if text.startswith("/"):
         return
 
     cursor.execute("""
-    SELECT id, title FROM articles
-    WHERE title LIKE ? OR content LIKE ? OR tags LIKE ?
-    """, (f"%{query}%", f"%{query}%", f"%{query}%"))
+        SELECT id, title FROM articles
+        WHERE title LIKE ? OR content LIKE ? OR tags LIKE ?
+    """, (f"%{text}%", f"%{text}%", f"%{text}%"))
 
     results = cursor.fetchall()
 
@@ -23,8 +23,8 @@ async def search_handler(message: Message):
         await message.answer("🔍 نتیجه‌ای پیدا نشد.")
         return
 
-    text = "🔍 نتایج جستجو:\n\n"
+    response = "🔍 نتایج جستجو:\n\n"
     for art_id, title in results:
-        text += f"📘 /article_{art_id} — {title}\n"
+        response += f"📘 /article_{art_id} — {title}\n"
 
-    await message.answer(text)
+    await message.answer(response)
