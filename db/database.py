@@ -3,7 +3,7 @@ import sqlite3
 conn = sqlite3.connect("aqua.db")
 cursor = conn.cursor()
 
-# جدول کاربران
+# کاربران
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS users (
 )
 """)
 
-# جدول مقالات
+# مقالات
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS articles (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -23,7 +23,31 @@ CREATE TABLE IF NOT EXISTS articles (
 )
 """)
 
-# مقالات تستی (فقط یک بار اضافه می‌شوند)
+# سوالات کوییز
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS quiz_questions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    question TEXT,
+    option_a TEXT,
+    option_b TEXT,
+    option_c TEXT,
+    option_d TEXT,
+    correct_option TEXT
+)
+""")
+
+# سوالات تستی
+cursor.execute("""
+INSERT OR IGNORE INTO quiz_questions
+(id, question, option_a, option_b, option_c, option_d, correct_option)
+VALUES
+(1, 'بهترین دما برای آکواریوم گیاهی کدام است؟',
+ '۱۸–۲۰ درجه', '۲۲–۲۶ درجه', '۳۰–۳۲ درجه', '۱۵–۱۷ درجه', 'b'),
+(2, 'سیفون آب معمولاً هر چند وقت یک‌بار انجام می‌شود؟',
+ 'هر روز', 'هر هفته', 'هر ۶ ماه', 'هر سال', 'b')
+""")
+
+# مقالات تستی
 cursor.execute("""
 INSERT OR IGNORE INTO articles (id, title, content, tags) VALUES
 (1, 'شروع آکواریوم برای مبتدی‌ها',
