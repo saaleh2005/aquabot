@@ -1,23 +1,17 @@
 from aiogram import Router
 from aiogram.types import Message
-from aiogram.filters import Command
 from db.database import cursor, conn
-from keyboards.menu import main_menu
 
 start_router = Router()
 
-@start_router.message(Command("start"))
-async def start_cmd(message: Message):
-    tg_id = message.from_user.id
-    username = message.from_user.username
+@start_router.message(commands=["start"])
+async def start(message: Message):
+    user_id = message.from_user.id
 
     cursor.execute(
-        "INSERT OR IGNORE INTO users (tg_id, username) VALUES (?, ?)",
-        (tg_id, username)
+        "INSERT OR IGNORE INTO users (tg_id, score) VALUES (?, 0)",
+        (user_id,)
     )
     conn.commit()
 
-    await message.answer(
-        "🐠 خوش اومدی!\n\nاز منوی زیر استفاده کن 👇",
-        reply_markup=main_menu()
-    )
+    await message.answer("🐠 خوش آمدید! ربات آکواریومی آماده است.")
