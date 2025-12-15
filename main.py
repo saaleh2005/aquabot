@@ -6,6 +6,7 @@ from handlers.start import start_router
 from handlers.articles import articles_router
 from handlers.quiz import quiz_router
 from handlers.search import search_router
+from handlers.stats import stats_router
 
 async def main():
     bot = Bot(token=BOT_TOKEN)
@@ -15,6 +16,7 @@ async def main():
     dp.include_router(articles_router)
     dp.include_router(quiz_router)
     dp.include_router(search_router)
+    dp.include_router(stats_router)
 
     await dp.start_polling(bot)
 
