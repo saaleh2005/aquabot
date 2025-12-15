@@ -14,4 +14,4 @@ async def start(message: Message):
     )
     conn.commit()
 
-    await message.answer("🐠 خوش آمدید! ربات آکواریومی آماده است.")
+    await message.answer("""🐠 خوش آمدید! ربات آکواریومی آماده است.""")
