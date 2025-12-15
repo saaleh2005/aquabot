@@ -18,6 +18,6 @@ async def start_cmd(message: Message):
     conn.commit()
 
     await message.answer(
-        "🐠 خوش اومدی!\n\nیکی از گزینه‌ها رو انتخاب کن 👇",
+        "🐠 خوش اومدی!\n\nاز منوی زیر استفاده کن 👇",
         reply_markup=main_menu()
     )
