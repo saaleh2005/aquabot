@@ -1,15 +1,23 @@
-from aiogram import Router, F
+from aiogram import Router
 from aiogram.types import Message
 from db.database import cursor
 
 search_router = Router()
 
-@search_router.message(F.text.len() > 2)
+@search_router.message()
 async def search_handler(message: Message):
     text = message.text.strip()
 
-    # اگر دستور بود، ردش کن
+    # ❌ دستورات
     if text.startswith("/"):
+        return
+
+    # ❌ جواب‌های کوییز (A/B/C/D)
+    if text.lower() in ["a", "b", "c", "d"]:
+        return
+
+    # ❌ متن‌های خیلی کوتاه
+    if len(text) < 3:
         return
 
     cursor.execute("""
