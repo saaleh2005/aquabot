@@ -9,9 +9,9 @@ async def start(message: Message):
     user_id = message.from_user.id
 
     cursor.execute(
-        "INSERT OR IGNORE INTO users (tg_id, score) VALUES (?, 0)",
-        (user_id,)
+        "INSERT OR IGNORE INTO users (tg_id, score) VALUES (?, ?)",
+        (user_id, 0)
     )
     conn.commit()
 
-    await message.answer("🐠 خوش آمدید! ربات آکواریومی آماده است.")
+    await message.answer("🐠 خوش اومدی! ربات آکواریومی آماده است.")
