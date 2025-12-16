@@ -1,4 +1,4 @@
-from aiogram import Router
+from aiogram import Router, F
 from aiogram.types import CallbackQuery, Message
 from db.database import cursor, conn
 
@@ -6,13 +6,19 @@ quiz_router = Router()
 
 active_quiz = {}
 
-@quiz_router.callback_query(lambda c: c.data == "quiz")
+@quiz_router.callback_query(F.data == "quiz")
 async def start_quiz(callback: CallbackQuery):
-    cursor.execute("SELECT * FROM quiz_questions ORDER BY RANDOM() LIMIT 1")
+    cursor.execute("""
+        SELECT id, question, option_a, option_b, option_c, option_d, correct_option
+        FROM quiz_questions
+        ORDER BY RANDOM()
+        LIMIT 1
+    """)
     q = cursor.fetchone()
 
     if not q:
         await callback.message.answer("❌ سوالی وجود ندارد.")
+        await callback.answer()
         return
 
     q_id, question, a, b, c, d, correct = q
@@ -26,27 +32,21 @@ async def start_quiz(callback: CallbackQuery):
         f"B️⃣ {b}\n"
         f"C️⃣ {c}\n"
         f"D️⃣ {d}\n\n"
-        "✍️ جواب را با A / B / C / D ارسال کنید"
+        "✍️ جواب رو با A / B / C / D بفرست"
     )
 
     await callback.message.answer(text)
+    await callback.answer()
 
 
-@quiz_router.message()
+@quiz_router.message(F.text.lower().in_(["a", "b", "c", "d"]))
 async def check_answer(message: Message):
-    if not message.text:
-        return
-
     user_id = message.from_user.id
 
     if user_id not in active_quiz:
         return
 
-    answer = message.text.strip().lower()
-
-    if answer not in ("a", "b", "c", "d"):
-        return
-
+    answer = message.text.lower()
     correct = active_quiz[user_id]
 
     if answer == correct:
